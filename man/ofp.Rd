@@ -64,6 +64,3 @@ reactivity scale and hydrocarbon bin reactivities for regulatory applications.
 California Air Resources Board Contract, 2009, 339" (revised January 28, 2010).
 Note: If input VOC species contain M,P-xylene, it will be automatically divided into m-xylene and P-xylene evenly.
 }
-\examples{
-ofp(voc)
-}

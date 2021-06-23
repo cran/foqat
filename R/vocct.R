@@ -39,8 +39,6 @@
 #' Con_ppbv_group_mean: VOC volume concentration average and proportion (sorted from large to small) according to major groups;
 #'
 #' @export
-#' @examples
-#' vocct(voc)
 #' @importFrom utils URLencode
 #' @importFrom utils download.file
 #' @importFrom xml2 read_html

@@ -37,8 +37,6 @@
 #' OFP_Result_group_mean: the average value and proportion of OFP of VOC according to major groups (sorted from large to small).
 #'
 #' @export
-#' @examples
-#' ofp(voc)
 #' @importFrom utils URLencode
 #' @importFrom utils download.file
 #' @importFrom xml2 read_html

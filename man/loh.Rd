@@ -61,6 +61,3 @@ OH Rate Constant is matched through the CAS number and used for time series calc
 The OH Rate Constant comes from 'AopWin v1.92' in 25 degree celsius.
 Note: If input VOC species contain M,P-xylene, it will be automatically divided into m-xylene and P-xylene evenly.
 }
-\examples{
-loh(voc)
-}
