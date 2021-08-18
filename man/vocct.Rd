@@ -11,7 +11,6 @@ vocct(
   p = 101.325,
   stcd = FALSE,
   sortd = TRUE,
-  colid = 1,
   chn = FALSE
 )
 }
@@ -34,8 +33,6 @@ By default, p equals to 101.325 kPa.}
 are sorted or not. By default, sortd has value "TRUE".
 If TRUE, VOC species in time series will be arranged according to VOC group,
  relative molecular weight, and MIR value.}
-
-\item{colid}{column index for date-time. The default value is 1.}
 
 \item{chn}{logical. Dose colnames present as Chinese? The default vaule is FALSE.}
 }
@@ -62,5 +59,7 @@ Molecular Weight (MW) value and Maximum Incremental Reactivity (MIR) value are m
 The MIR value comes from "Carter, W. P. (2009). Updated maximum incremental
 reactivity scale and hydrocarbon bin reactivities for regulatory applications.
 California Air Resources Board Contract, 2009, 339" (revised January 28, 2010).
-Note: If input VOC species contain M,P-xylene, it will be automatically divided into m-xylene and P-xylene evenly.
+}
+\examples{
+vocct(voc)
 }

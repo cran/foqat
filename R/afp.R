@@ -1,17 +1,17 @@
-#' Calculate ozone formation potential
+#' Calculate aerosol formation potential
 #'
-#' Calculate Ozone Formation Potential (OFP) of VOC time series.
+#' Calculate Aerosol Formation Potential (AFP) of VOC time series. Unit of AFP is ug/m3.
 #' Note: for Chinese VOC name, please also use English punctuation.
 #'
 #' The CAS number is matched for each VOC speices (from column name), and the
-#' Maximum Incremental Reactivity (MIR) value is matched through the CAS number and used for time series calculation. \cr
-#' The MIR value comes from <https://ww2.arb.ca.gov/sites/default/files/classic/regact/2009/mir2009/mir10.pdf>, 
-#' Zhang et al.(2021) <doi:10.5194/acp-21-11053-2021>.
+#' average SOA yield (SOAY) is matched through the CAS number and used for time series calculation. \cr
+#' The average SOAY comes from "W. Wu, B. Zhao, S. Wang, J. Hao, Ozone 
+#' and secondary organic aerosol formation potential from anthropogenic volatile 
+#' organic compounds emissions in China. J Environ Sci. 53, 224–237 (2017)".
+#' Note: If input VOC species contain M,P-xylene, it will be automatically divided into m-xylene and P-xylene evenly.
 #'
 #' @param df dataframe contains time series.
 #' @param inunit input's unit for VOC concentration. A character vector from these options: "ugm" or "ppbv". 
-#' "ugm" means ug/m3. "ppbv" means part per billion volumn. The default vaule is "ppbv".
-#' @param outunit output's unit for VOC concentration. A character from these options: "ugm" or "ppbv". 
 #' "ugm" means ug/m3. "ppbv" means part per billion volumn. The default vaule is "ppbv".
 #' @param t Temperature, in Degrees Celsius, used to convert data in 
 #' micrograms per cubic meter to standard conditions 
@@ -23,40 +23,27 @@
 #' @param sortd logical value. It determines whether the VOC species
 #' are sorted or not. By default, sortd has value "TRUE".
 #' If TRUE, VOC species in time series will be arranged according to VOC group,
-#'  relative molecular weight, and MIR value.
+#'  relative molecular weight, and SOAY value.
 #' @param chn logical. Dose colnames present as Chinese? The default vaule is FALSE.
-#' @param mtype text. "usa" for MIR value from USA, "chn" for MIR value from CHINA.
 #' @return  a list contains 5 tables:
-#' MIR_Result: matched MIR value result;
-#' OFP_Result: OFP time series of VOC by species;
-#' OFP_Result_mean: the average value and proportion of OFP of VOC by species (sorted from large to small);
-#' OFP_Result_group: OFP time series of VOC classified by groups;
-#' OFP_Result_group_mean: the average value and proportion of OFP of VOC according to major groups (sorted from large to small).
+#' SOAY_Result: matched SOAY value result;
+#' AFP_Result: AFP time series of VOC by species;
+#' AFP_Result_mean: the average value and proportion of AFP of VOC by species (sorted from large to small);
+#' AFP_Result_group: AFP time series of VOC classified by groups;
+#' AFP_Result_group_mean: the average value and proportion of AFP of VOC according to major groups (sorted from large to small).
 #'
 #' @export
-#' @examples
-#' ofp(voc)
 #' @import magrittr
 #' @importFrom stringr str_split_fixed
 
-ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd=FALSE, sortd =TRUE, chn=FALSE, mtype="usa"){
-
-  #generate datacasv2 according to datacas
-  datacasv2=datacas
-  if(mtype=="usa"){
-	datacasv2$MIR=datacasv2$New
-	datacasv2$MIR_type="USA"
-  }else{
-	datacasv2$MIR=datacasv2$mir_cn
-	datacasv2$MIR_type="CHINA"
-  }
+afp <- function(df, inunit = "ppbv", t = 25, p = 101.325, stcd=FALSE, sortd =TRUE, chn=FALSE){
 
   #In case df is not a dataframe.
   temp_col_name <- colnames(df)
   df <- data.frame(df,stringsAsFactors = FALSE)
   colnames(df) <- temp_col_name
 
-  if(chn==FALSE){  	  
+  if(chn==FALSE){  
 	  #get VOC name by colnames of df
 	  #if read from xlsx, replace "X" and "."
 	  colnm_df = colnames(df)[2:ncol(df)]
@@ -66,7 +53,7 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
 	  chemicalnames = gsub("\\i-", "iso-", chemicalnames)
 
 	  #build name_df
-	  name_df = data.frame(name = chemicalnames,CAS = NA, Matched_Name = NA, MIR = NA, MIR_type = NA, MW = NA, Group = NA, stringsAsFactors = FALSE)
+	  name_df = data.frame(name = chemicalnames,CAS = NA, Matched_Name = NA, SOAY = NA, MW = NA, Group = NA, stringsAsFactors = FALSE)
 
 	  #search VOC name to get CAS Number from different sources, add cas, sources, mathed_name to name_df
 	  ##firstly by NIST
@@ -75,40 +62,38 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
 		#test if name can be matched by names
 		tarname=gsub("[^[:alnum:]]", "",tarname)
 		tarname=tolower(tarname)
-		tarid=eval(parse(text=paste0("grep('(?<![^;])",tarname,"(?![^;])',datacasv2$otn, value = FALSE, perl=TRUE)")))
+		tarid=eval(parse(text=paste0("grep('(?<![^;])",tarname,"(?![^;])',datacas$otn, value = FALSE, perl=TRUE)")))
 		#if no, test if name can be matched by names
 		if(length(tarid)!=1){
 			tarname <- name_df[i,1]
-			tarid=eval(parse(text=paste0("grep('(?<![^;])",tarname,"(?![^;])',datacasv2$CAS, value = FALSE, perl=TRUE)")))
+			tarid=eval(parse(text=paste0("grep('(?<![^;])",tarname,"(?![^;])',datacas$CAS, value = FALSE, perl=TRUE)")))
 		}
 		#if finally get tarid (match)
 		if(length(tarid)==1){
 			tarid=as.numeric(tarid)
-			name_df$CAS[i] = datacasv2$CAS[tarid]
-			name_df$Matched_Name[i] = datacasv2$Description[tarid]
-			name_df$MIR[i] = datacasv2$MIR[tarid]
-			name_df$MIR_type[i] = datacasv2$MIR_type[tarid]
-			name_df$MW[i] = datacasv2$MWt[tarid]
-			name_df$Group[i] = datacasv2$Group[tarid]
+			name_df$CAS[i] = datacas$CAS[tarid]
+			name_df$Matched_Name[i] = datacas$Description[tarid]
+			name_df$SOAY[i] = datacas$soay[tarid]
+			name_df$MW[i] = datacas$MWt[tarid]
+			name_df$Group[i] = datacas$Group[tarid]
 		}
 	  }
 	}else{
 	  #build name_df
 	  colnm_df = colnames(df)[2:ncol(df)]
 	  chemicalnames = ifelse(substr(colnm_df, 1, 1) == "X", sub("^.", "", colnm_df), colnm_df)
-	  name_df = data.frame(name = chemicalnames,CAS = NA, Matched_Name = NA, MIR = NA, MIR_type = NA, MW = NA, Group = NA, stringsAsFactors = FALSE)
+	  name_df = data.frame(name = chemicalnames,CAS = NA, Matched_Name = NA, SOAY = NA, MW = NA, Group = NA, stringsAsFactors = FALSE)
 	  #match table by chinese name
 
-	  chn_name_db<-data.frame(str_split_fixed(gsub("\\/|\\,|\\-| ", "", datacasv2$chn), ';', 3))#change according to max chinese name vector
+	  chn_name_db<-data.frame(str_split_fixed(gsub("\\/|\\,|\\-| ", "", datacas$chn), ';', 3))#change according to max chinese name vector
 	  for(k in 1:nrow(name_df)){
-		chn_df<-data.frame(str_split_fixed(gsub("\\,|\\-| ", "", datacasv2$chn), ';', 2))
+		chn_df<-data.frame(str_split_fixed(gsub("\\,|\\-| ", "", datacas$chn), ';', 2))
 		x=which(chn_df == gsub("\\,|\\,|\\-| ", "", name_df$name[k]), arr.ind = TRUE)[1]
-		df_null=data.frame(datacasv2[x,])
+		df_null=data.frame(datacas[x,])
 		if(nrow(df_null)!=0){
 		  name_df$CAS[as.numeric(k)] = df_null$CAS[1]
-		  name_df$Matched_Name[as.numeric(k)] = df_null$Description[1]
-		  name_df$MIR[as.numeric(k)] = df_null$MIR[1]
-		  name_df$MIR_type[as.numeric(k)] = df_null$MIR_type[1]
+		  name_df$Matched_Name[as.numeric(k)] = df_null$Description[1]		  
+		  name_df$SOAY[as.numeric(k)] = df_null$soay[1]
 		  name_df$MW[as.numeric(k)] = df_null$MWt[1]
 		  name_df$Group[as.numeric(k)] = df_null$Group[1]
 		}
@@ -128,13 +113,13 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
   if(sortd==TRUE){
 	  #order by 2 columns
 	  name_df$Group <- factor(name_df$Group, levels = c("Alkanes", "Alkenes", "BVOC", "Alkynes", "Aromatic_Hydrocarbons", "Oxygenated_Organics", "Other_Organic_Compounds", "Unknown"))
-	  name_df = name_df[with(name_df, order(Group, MW, MIR)), ]
+	  name_df = name_df[with(name_df, order(Group, MW, SOAY)), ]
 	  df[,2:ncol(df)]=df[,name_df$raw_order+1]
 	  colnames(df)[2:ncol(df)]=colnames(df)[name_df$raw_order+1]
   }
 
-  #set concentration df, multiple df with MIR in name_df
-  ofp_df = df
+  #set concentration df, multiple df with SOAY in name_df
+  afp_df = df
   r = 22.4*(273.15+t)*101.325/(273.15*p)
   r2 = (298.15*p)/((273.15+t)*101.325)
   if(inunit=="ugm"){
@@ -143,7 +128,7 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
 	if(stcd==TRUE){
 		Con_ugm[,2:ncol(df)] = Con_ugm[,2:ncol(df)]/r2	
 	}
-	ofp_df[,2:ncol(df)] = data.frame(matrix(sapply(2:ncol(df),function(x) Con_ugm[,x] * as.numeric(name_df$MIR)[x-1]),ncol = ncol(df)-1))	
+	afp_df[,2:ncol(df)] = data.frame(matrix(sapply(2:ncol(df),function(x) Con_ugm[,x] * as.numeric(name_df$SOAY)[x-1]),ncol = ncol(df)-1))	
 	Con_ppbv[,2:ncol(df)] = data.frame(matrix(sapply(2:ncol(df),function(x) df[,x]*as.numeric(r/name_df$MW)[x-1]),ncol = ncol(df)-1))
   }else if(inunit=="ppbv"){
     Con_ppbv = df
@@ -153,7 +138,7 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
 	}else{
 		Con_ugm[,2:ncol(df)] = data.frame(matrix(sapply(2:ncol(df),function(x) df[,x]*as.numeric(name_df$MW/24.45016)[x-1]),ncol = ncol(df)-1))		
 	}
-	ofp_df[,2:ncol(df)] = data.frame(matrix(sapply(2:ncol(df),function(x) Con_ugm[,x] * as.numeric(name_df$MIR)[x-1]),ncol = ncol(df)-1))
+	afp_df[,2:ncol(df)] = data.frame(matrix(sapply(2:ncol(df),function(x) Con_ugm[,x] * as.numeric(name_df$SOAY)[x-1]),ncol = ncol(df)-1))
   }else{
     print("input-unit error")
   }
@@ -164,7 +149,7 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
   #generate group df
   Con_ppbv_group=data.frame(Time=df[,1], Alkanes=NA, Alkenes_exclude_BVOC=NA, BVOC=NA, Alkynes=NA, Aromatic_Hydrocarbons=NA, Oxygenated_Organics=NA, Other_Organic_Compounds=NA, Unknown=NA)
   Con_ugm_group=data.frame(Time=df[,1], Alkanes=NA, Alkenes_exclude_BVOC=NA, BVOC=NA, Alkynes=NA, Aromatic_Hydrocarbons=NA, Oxygenated_Organics=NA, Other_Organic_Compounds=NA, Unknown=NA)
-  ofp_df_group=data.frame(Time=df[,1], Alkanes=NA, Alkenes_exclude_BVOC=NA, BVOC=NA, Alkynes=NA, Aromatic_Hydrocarbons=NA, Oxygenated_Organics=NA, Other_Organic_Compounds=NA, Unknown=NA)
+  afp_df_group=data.frame(Time=df[,1], Alkanes=NA, Alkenes_exclude_BVOC=NA, BVOC=NA, Alkynes=NA, Aromatic_Hydrocarbons=NA, Oxygenated_Organics=NA, Other_Organic_Compounds=NA, Unknown=NA)
 
   #sum up columns
   for(gn in 1:length(gn_list)){
@@ -173,11 +158,11 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
 		if(length(gn_sub_index)==1){
 			Con_ppbv_group[,gn+1]=Con_ppbv[,gn_sub_index+1]
 			Con_ugm_group[,gn+1]=Con_ugm[,gn_sub_index+1]
-			ofp_df_group[,gn+1]=ofp_df[,gn_sub_index+1]
+			afp_df_group[,gn+1]=afp_df[,gn_sub_index+1]
 		}else{
 			Con_ppbv_group[,gn+1]=rowSums(Con_ppbv[,gn_sub_index+1], na.rm=TRUE) *NA^!rowSums(!is.na(Con_ppbv[,gn_sub_index+1]))
 			Con_ugm_group[,gn+1]=rowSums(Con_ugm[,gn_sub_index+1], na.rm=TRUE) *NA^!rowSums(!is.na(Con_ugm[,gn_sub_index+1]))
-			ofp_df_group[,gn+1]=rowSums(ofp_df[,gn_sub_index+1], na.rm=TRUE) *NA^!rowSums(!is.na(ofp_df[,gn_sub_index+1]))
+			afp_df_group[,gn+1]=rowSums(afp_df[,gn_sub_index+1], na.rm=TRUE) *NA^!rowSums(!is.na(afp_df[,gn_sub_index+1]))
 		}
 	}
   }
@@ -194,11 +179,11 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
   Con_ppbv_mean$Proportion=round(Con_ppbv_mean$Proportion,4)
   Con_ppbv_mean=Con_ppbv_mean[with(Con_ppbv_mean, order(-mean)), ]
 
-  #ofp_df_mean
-  ofp_df_mean=data.frame(species=row.names(statdf(ofp_df)[-1,]),mean=as.numeric(as.character(statdf(ofp_df,n = 6)[-1,1])))
-  ofp_df_mean$Proportion=ofp_df_mean$mean/sum(as.numeric(as.character(statdf(ofp_df,n = 6)[-1,1])),na.rm = TRUE)
-  ofp_df_mean$Proportion=round(ofp_df_mean$Proportion,4)
-  ofp_df_mean=ofp_df_mean[with(ofp_df_mean, order(-mean)), ]
+  #afp_df_mean
+  afp_df_mean=data.frame(species=row.names(statdf(afp_df)[-1,]),mean=as.numeric(as.character(statdf(afp_df,n = 6)[-1,1])))
+  afp_df_mean$Proportion=afp_df_mean$mean/sum(as.numeric(as.character(statdf(afp_df,n = 6)[-1,1])),na.rm = TRUE)
+  afp_df_mean$Proportion=round(afp_df_mean$Proportion,4)
+  afp_df_mean=afp_df_mean[with(afp_df_mean, order(-mean)), ]
 
   #Con_ugm_group_mean
   Con_ugm_group_mean=data.frame(species=row.names(statdf(Con_ugm_group)[-1,]),mean=as.numeric(as.character(statdf(Con_ugm_group,n = 6)[-1,1])))
@@ -212,26 +197,19 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
   Con_ppbv_group_mean$Proportion=round(Con_ppbv_group_mean$Proportion,4)
   Con_ppbv_group_mean=Con_ppbv_group_mean[with(Con_ppbv_group_mean, order(-mean)), ]
 
-  #ofp_df_group_mean
-  ofp_df_group_mean=data.frame(species=row.names(statdf(ofp_df_group)[-1,]),mean=as.numeric(as.character(statdf(ofp_df_group,n = 6)[-1,1])))
-  ofp_df_group_mean$Proportion=ofp_df_group_mean$mean/sum(as.numeric(as.character(statdf(ofp_df_group,n = 6)[-1,1])),na.rm = TRUE)
-  ofp_df_group_mean$Proportion=round(ofp_df_group_mean$Proportion,4)
-  ofp_df_group_mean=ofp_df_group_mean[with(ofp_df_group_mean, order(-mean)), ]
-
-  if(outunit == "ppbv"){
-	ofp_df[,-1]=ofp_df[,-1]/48*24.45
-	ofp_df_mean[,2]=ofp_df_mean[,2]/48*24.45
-	ofp_df_group[,-1]=ofp_df_group[,-1]/48*24.45
-	ofp_df_group_mean[,2]=ofp_df_group_mean[,2]/48*24.45
-  }
+  #afp_df_group_mean
+  afp_df_group_mean=data.frame(species=row.names(statdf(afp_df_group)[-1,]),mean=as.numeric(as.character(statdf(afp_df_group,n = 6)[-1,1])))
+  afp_df_group_mean$Proportion=afp_df_group_mean$mean/sum(as.numeric(as.character(statdf(afp_df_group,n = 6)[-1,1])),na.rm = TRUE)
+  afp_df_group_mean$Proportion=round(afp_df_group_mean$Proportion,4)
+  afp_df_group_mean=afp_df_group_mean[with(afp_df_group_mean, order(-mean)), ]
 
   #results
   results <- list(
-	MIR_Result = name_df,
-	OFP_Result = ofp_df,
-	OFP_Result_mean = ofp_df_mean,
-	OFP_Result_group = ofp_df_group,
-	OFP_Result_group_mean = ofp_df_group_mean
+	SOAY_Result = name_df,
+	afp_Result = afp_df,
+	afp_Result_mean = afp_df_mean,
+	afp_Result_group = afp_df_group,
+	afp_Result_group_mean = afp_df_group_mean
   )
   return(results)
 }

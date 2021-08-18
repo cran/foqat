@@ -6,7 +6,7 @@
 #' If you have wind data (wind speed, and wind direction in dgree), please set 'wind' as 'TRUE', and set values for 'coliwd' and 'coliws'.
 #'
 #' @param df dataframe of time series.
-#' @param bkip the basic time reslution for average variation, such as '1 hour'.
+#' @param bkip the basic time reslution for average variation, such as '1 hour'. If mode "custom" is selected, do not need to enter bkip.
 #' @param mode for calculating cycles: "recipes", "ncycle", "custom".
 #' "recipes" means using internal setting for calculation.
 #' "ncycle" means setting number of items for per cycle.
@@ -18,7 +18,6 @@
 #' "year" equals to 12 (months) values in 1 year.
 #' values for "ncycle" is a number representing number of items in per cycle.
 #' values for "custom" is a number representing column index in dataframe.
-#' @param colid column index for date-time. The default value is 1.
 #' @param st start time of resampling. The default value is the fisrt value of datetime column.
 #' @param et end time of resampling. The default value is the last value of datetime column.
 #' @param na.rm logical value. Remove NA value or not?
@@ -26,8 +25,8 @@
 #' @param wind logical value. if TRUE, please set coliwd, coliws.
 #' @param coliws numeric value, column index of wind speed in dataframe.
 #' @param coliwd numeric value, column index of wind direction (degree) in dataframe.
-#' @return  a dataframe. The first column is the serial number within the period. The
-#' average variation start from the second column. \cr
+#' @return  a list with 2 dataframe (average and SD). The first column of dataframe is the serial number within the period. The
+#' average variation (or SD) start from the second column. \cr
 #' Note that when the pattern USES
 #' "ncycle" or "custom", the start time determines the start time of the first
 #' element in the average variation. For example, if the first timestamp of data is
@@ -42,11 +41,21 @@
 #' @importFrom stats aggregate
 #' @importFrom lubridate duration
 
-avri<-function(df, bkip, mode = "recipes", value = "day", colid = 1, st = NULL, et = NULL, na.rm = TRUE, digits = 2, wind = FALSE, coliws = 2, coliwd = 3){
+avri<-function(df, bkip=NULL, mode = "recipes", value = "day", st = NULL, et = NULL, na.rm = TRUE, digits = 2, wind = FALSE, coliws = 2, coliwd = 3){
 
   #time resampling
-  rs_df <- trs(df, bkip, colid = colid, st = st, et = et, na.rm = na.rm, wind = wind, coliws = coliws, coliwd = coliwd)
-
+  if(mode!="custom"){
+	rs_df <- trs(df, bkip, st = st, et = et, na.rm = na.rm, wind = wind, coliws = coliws, coliwd = coliwd)
+  }else{
+	rs_df=df
+  }
+  
+  #move value column to first column
+  if(mode=="custom"&value!=1){
+	rs_df[,1:value] = rs_df[,c(value,1:(value-1))]
+    colnames(rs_df)[1:value] = colnames(rs_df)[c(value,1:(value-1))]
+  }
+  
   #get colnames of rs_df
   cona_df <- colnames(rs_df)
 
@@ -76,7 +85,7 @@ avri<-function(df, bkip, mode = "recipes", value = "day", colid = 1, st = NULL, 
   }else if(mode=="ncycle"){
     mod_list=seq(0,nrow(rs_df)-1,1)%%value
   }else if(mode=="custom"){
-    mod_list=rs_df[,value]
+    mod_list=rs_df[,1]
   }
 
   #avearage
@@ -89,7 +98,7 @@ avri<-function(df, bkip, mode = "recipes", value = "day", colid = 1, st = NULL, 
   if(wind == TRUE){
     datat=results
     datat$fake_degree<-(atan(datat$u/datat$v)/pi*180)
-    datat$ws<-sqrt((datat$u)^2+(datat$v)^2)
+    datat$temp_ws<-sqrt((datat$u)^2+(datat$v)^2)
     datat <- within(datat, {
       true_degree = ifelse(datat$v<0,datat$fake_degree+180,ifelse(datat$u<0,datat$fake_degree+360,datat$fake_degree))
     })
@@ -103,7 +112,7 @@ avri<-function(df, bkip, mode = "recipes", value = "day", colid = 1, st = NULL, 
   if(wind == TRUE){
     datat=results_sd
     datat$fake_degree<-(atan(datat$u/datat$v)/pi*180)
-    datat$ws<-sqrt((datat$u)^2+(datat$v)^2)
+    datat$temp_ws<-sqrt((datat$u)^2+(datat$v)^2)
     datat <- within(datat, {
       true_degree = ifelse(datat$v<0,datat$fake_degree+180,ifelse(datat$u<0,datat$fake_degree+360,datat$fake_degree))
     })
@@ -114,13 +123,21 @@ avri<-function(df, bkip, mode = "recipes", value = "day", colid = 1, st = NULL, 
   }
 
   #format average data (avoid NA)
-  if(!all(is.na(results_sd[, -1]))){
-  results[,-1]=lapply(results[,-1], formatC, format = "e", digits = digits)
+  if(!all(is.na(results[, -1]))){
+	if(ncol(results)==2){
+		results[,-1]=do.call(rbind, lapply(results[,-1], formatC, format = "e", digits = digits))
+	}else{
+		results[,-1]=lapply(results[,-1], formatC, format = "e", digits = digits)
+	}
   }
 
   #format sd data (avoid NA)
   if(!all(is.na(results_sd[, -1]))){
-  results_sd[,-1]=lapply(results_sd[,-1], formatC, format = "e", digits = digits)
+	if(ncol(results_sd)==2){
+		results_sd[,-1]=do.call(rbind, lapply(results_sd[,-1], formatC, format = "e", digits = digits))
+	}else{
+		results_sd[,-1]=lapply(results_sd[,-1], formatC, format = "e", digits = digits)
+	}
   }
 
   #name for cycle

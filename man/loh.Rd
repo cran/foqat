@@ -11,7 +11,6 @@ loh(
   p = 101.325,
   stcd = FALSE,
   sortd = TRUE,
-  colid = 1,
   atk = TRUE,
   chn = FALSE
 )
@@ -37,8 +36,6 @@ are sorted or not. By default, sortd has value "TRUE".
 If TRUE, VOC species in time series will be arranged according to VOC group,
  relative molecular weight, and OH Rate Constant.}
 
-\item{colid}{column index for date-time. The default value is 1.}
-
 \item{atk}{logical. use kOH value from atk or not? If not, kOH comes from 'AopWin v1.92' will be used. The default vaule is TRUE.}
 
 \item{chn}{logical. Dose colnames present as Chinese? The default vaule is FALSE.}
@@ -59,5 +56,7 @@ Note: for Chinese VOC name, please also use English punctuation.
 The CAS number is matched for each VOC speices (from column name), and the
 OH Rate Constant is matched through the CAS number and used for time series calculation. \cr
 The OH Rate Constant comes from 'AopWin v1.92' in 25 degree celsius.
-Note: If input VOC species contain M,P-xylene, it will be automatically divided into m-xylene and P-xylene evenly.
+}
+\examples{
+loh(voc)
 }
