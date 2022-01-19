@@ -15,7 +15,8 @@ avri(
   digits = 2,
   wind = FALSE,
   coliws = 2,
-  coliwd = 3
+  coliwd = 3,
+  sn = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ values for "custom" is a number representing column index in dataframe.}
 \item{coliws}{numeric value, column index of wind speed in dataframe.}
 
 \item{coliwd}{numeric value, column index of wind direction (degree) in dataframe.}
+
+\item{sn}{logical value. if TRUE, the results will be presented by scientific notation (string).}
 }
 \value{
 a list with 2 dataframe (average and SD). The first column of dataframe is the serial number within the period. The
