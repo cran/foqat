@@ -43,7 +43,7 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' \dontrun{ 
 #' #example 1
 #' geom_ts_batch(aqi)
 #' #example 2

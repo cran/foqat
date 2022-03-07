@@ -1,7 +1,7 @@
 Package: foqat
 Type: Package
 Title: Field Observation Quick Analysis Toolkit
-Version: 2.0.0
+Version: 2.0.1
 Author: Tianshu Chen
 Maintainer: Tianshu Chen <tianshu129@163.com>
 Description: Tools for quickly processing and analyzing 
@@ -13,7 +13,7 @@ Description: Tools for quickly processing and analyzing
 	homepage<https://github.com/tianshu129/foqat>.
 	Scientific Reference:
 	1. The Hydroxyl Radical (OH) Reactivity: Roger Atkinson and Janet Arey (2003) <doi:10.1021/cr0206420>.
-	2. Ozone Formation Potential (OFP): <http://ww2.arb.ca.gov/sites/default/files/barcu/regact/2009/mir2009/mir10.pdf>, Zhang et al.(2021) <doi:10.5194/acp-21-11053-2021>.
+	2. Ozone Formation Potential (OFP): <https://ww2.arb.ca.gov/sites/default/files/barcu/regact/2009/mir2009/mir10.pdf>, Zhang et al.(2021) <doi:10.5194/acp-21-11053-2021>.
 	3. Aerosol Formation Potential (AFP): Wenjing Wu et al. (2016) <doi:10.1016/j.jes.2016.03.025>.
 	4. TUV model: <https://www2.acom.ucar.edu/modeling/tropospheric-ultraviolet-and-visible-tuv-radiation-model>.
 URL: https://github.com/tianshu129/foqat
@@ -27,6 +27,6 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2022-01-19 00:58:44 UTC; Administrator
+Packaged: 2022-03-07 08:26:27 UTC; Administrator
 Repository: CRAN
-Date/Publication: 2022-01-19 10:42:42 UTC
+Date/Publication: 2022-03-07 08:40:02 UTC

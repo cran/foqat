@@ -39,5 +39,7 @@ geom_tsw(
 Easy way to plot time series.
 }
 \examples{
+\dontrun{ 
 geom_tsw(met, coliws=4, coliwd=5)
+}
 }

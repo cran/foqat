@@ -76,7 +76,7 @@ side for discrete variables.}
 Easy way to plot time series in batch.
 }
 \examples{
-\dontrun{
+\dontrun{ 
 #example 1
 geom_ts_batch(aqi)
 #example 2

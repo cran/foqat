@@ -14,7 +14,9 @@
 #'
 #' @export
 #' @examples
+#' \dontrun{ 
 #' geom_tsw(met, coliws=4, coliwd=5)
+#' }
 #' @importFrom ggplot2 ggplot geom_line geom_text scale_y_continuous scale_colour_viridis_c theme_bw
 
 geom_tsw <- function(df, coliws = 2, coliwd = 3, lsize = 0.8, psize=NA, msize = 8, tickx = 0.05, ticky = -0.1, tickwd = 270){
