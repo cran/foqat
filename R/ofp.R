@@ -28,11 +28,11 @@
 #' @param mtype text. "usa" for MIR value from USA, "chn" for MIR value from CHINA.
 #' @param bvoc logical. Whether you want to list BVOC as a separate VOC group? The default vaule is TRUE.
 #' @return  a list contains 5 tables:
-#' MIR_Result: matched MIR value result;
-#' OFP_Result: OFP time series of VOC by species;
-#' OFP_Result_mean: the average value and proportion of OFP of VOC by species (sorted from large to small);
-#' OFP_Result_group: OFP time series of VOC classified by groups;
-#' OFP_Result_group_mean: the average value and proportion of OFP of VOC according to major groups (sorted from large to small).
+#' MIR_Result: the matched MIR value results;
+#' OFP_Result: the OFP time series of VOC by species;
+#' OFP_Result_stat: the statistics of OFP of VOC by species;
+#' OFP_Result_group: OFP the time series of VOC classified by groups;
+#' OFP_Result_group_stat: the statistics of OFP of VOC according to major groups.
 #'
 #' @export
 #' @examples
@@ -205,37 +205,37 @@ ofp <- function(df, inunit = "ppbv", outunit = "ppbv", t = 25, p = 101.325, stcd
   ofp_df_group <- ofp_df_group[,colSums(is.na(ofp_df_group))<nrow(ofp_df_group)]
   
   #Con_ugm_stat
-  Con_ugm_stat=data.frame(Species=row.names(statdf(Con_ugm)),Mean=as.numeric(as.character(statdf(Con_ugm,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ugm,n = 3)[,2])),Min=as.numeric(as.character(statdf(Con_ugm,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ugm,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ugm,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ugm,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ugm,n = 3)[,6])))
+  Con_ugm_stat=data.frame(Species=row.names(statdf(Con_ugm)),Mean=as.numeric(as.character(statdf(Con_ugm,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ugm,n = 3)[,2])),Min=as.numeric(as.character(statdf(Con_ugm,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ugm,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ugm,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ugm,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ugm,n = 3)[,7])))
   Con_ugm_stat$Proportion=Con_ugm_stat$Mean/sum(as.numeric(as.character(statdf(Con_ugm,n = 3)[,1])),na.rm = TRUE)
   Con_ugm_stat$Proportion=round(Con_ugm_stat$Proportion,4)
   Con_ugm_stat=Con_ugm_stat[with(Con_ugm_stat, order(-Mean)), ]
 
   #Con_ppbv_stat
-  Con_ppbv_stat=data.frame(Species=row.names(statdf(Con_ppbv)),Mean=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,2])),Min=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,6])))
+  Con_ppbv_stat=data.frame(Species=row.names(statdf(Con_ppbv)),Mean=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,2])),Min=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ppbv,n = 3)[,7])))
   Con_ppbv_stat$Proportion=Con_ppbv_stat$Mean/sum(as.numeric(as.character(statdf(Con_ppbv,n = 3)[,1])),na.rm = TRUE)
   Con_ppbv_stat$Proportion=round(Con_ppbv_stat$Proportion,4)
   Con_ppbv_stat=Con_ppbv_stat[with(Con_ppbv_stat, order(-Mean)), ]
 
   #ofp_df_stat
-  ofp_df_stat=data.frame(Species=row.names(statdf(ofp_df)),Mean=as.numeric(as.character(statdf(ofp_df,n = 3)[,1])),SD=as.numeric(as.character(statdf(ofp_df,n = 3)[,2])),Min=as.numeric(as.character(statdf(ofp_df,n = 3)[,3])),Q25=as.numeric(as.character(statdf(ofp_df,n = 3)[,4])),Q50=as.numeric(as.character(statdf(ofp_df,n = 3)[,5])),Q75=as.numeric(as.character(statdf(ofp_df,n = 3)[,6])),Max=as.numeric(as.character(statdf(ofp_df,n = 3)[,6])))
+  ofp_df_stat=data.frame(Species=row.names(statdf(ofp_df)),Mean=as.numeric(as.character(statdf(ofp_df,n = 3)[,1])),SD=as.numeric(as.character(statdf(ofp_df,n = 3)[,2])),Min=as.numeric(as.character(statdf(ofp_df,n = 3)[,3])),Q25=as.numeric(as.character(statdf(ofp_df,n = 3)[,4])),Q50=as.numeric(as.character(statdf(ofp_df,n = 3)[,5])),Q75=as.numeric(as.character(statdf(ofp_df,n = 3)[,6])),Max=as.numeric(as.character(statdf(ofp_df,n = 3)[,7])))
   ofp_df_stat$Proportion=ofp_df_stat$Mean/sum(as.numeric(as.character(statdf(ofp_df,n = 3)[,1])),na.rm = TRUE)
   ofp_df_stat$Proportion=round(ofp_df_stat$Proportion,4)
   ofp_df_stat=ofp_df_stat[with(ofp_df_stat, order(-Mean)), ]
 
   #Con_ugm_group_stat
-  Con_ugm_group_stat=data.frame(Species=row.names(statdf(Con_ugm_group)),Mean=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,2])),Min=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,6])))
+  Con_ugm_group_stat=data.frame(Species=row.names(statdf(Con_ugm_group)),Mean=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,2])),Min=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,7])))
   Con_ugm_group_stat$Proportion=Con_ugm_group_stat$Mean/sum(as.numeric(as.character(statdf(Con_ugm_group,n = 3)[,1])),na.rm = TRUE)
   Con_ugm_group_stat$Proportion=round(Con_ugm_group_stat$Proportion,4)
   Con_ugm_group_stat=Con_ugm_group_stat[with(Con_ugm_group_stat, order(-Mean)), ]
 
   #Con_ppbv_group_stat
-  Con_ppbv_group_stat=data.frame(Species=row.names(statdf(Con_ppbv_group)),Mean=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,2])),min=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,6])))
+  Con_ppbv_group_stat=data.frame(Species=row.names(statdf(Con_ppbv_group)),Mean=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,1])),SD=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,2])),min=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,3])),Q25=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,4])),Q50=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,5])),Q75=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,6])),Max=as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,7])))
   Con_ppbv_group_stat$Proportion=Con_ppbv_group_stat$Mean/sum(as.numeric(as.character(statdf(Con_ppbv_group,n = 3)[,1])),na.rm = TRUE)
   Con_ppbv_group_stat$Proportion=round(Con_ppbv_group_stat$Proportion,4)
   Con_ppbv_group_stat=Con_ppbv_group_stat[with(Con_ppbv_group_stat, order(-Mean)), ]
 
   #ofp_df_group_stat
-  ofp_df_group_stat=data.frame(Species=row.names(statdf(ofp_df_group)),Mean=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,1])),SD=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,2])),Min=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,3])),Q25=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,4])),Q50=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,5])),Q75=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,6])),Max=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,6])))
+  ofp_df_group_stat=data.frame(Species=row.names(statdf(ofp_df_group)),Mean=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,1])),SD=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,2])),Min=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,3])),Q25=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,4])),Q50=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,5])),Q75=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,6])),Max=as.numeric(as.character(statdf(ofp_df_group,n = 3)[,7])))
   ofp_df_group_stat$Proportion=ofp_df_group_stat$Mean/sum(as.numeric(as.character(statdf(ofp_df_group,n = 3)[,1])),na.rm = TRUE)
   ofp_df_group_stat$Proportion=round(ofp_df_group_stat$Proportion,4)
   ofp_df_group_stat=ofp_df_group_stat[with(ofp_df_group_stat, order(-Mean)), ]

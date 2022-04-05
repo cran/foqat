@@ -11,9 +11,10 @@ geom_tsw(
   lsize = 0.8,
   psize = NA,
   msize = 8,
-  tickx = 0.05,
-  ticky = -0.1,
-  tickwd = 270
+  mlabel = "West wind",
+  mx = 0.05,
+  my = -0.1,
+  mwd = 270
 )
 }
 \arguments{
@@ -29,17 +30,20 @@ geom_tsw(
 
 \item{msize}{size of mark (wind direction). The default vaule is 8.}
 
-\item{tickx}{adjust value for the x position of wind direction legend. The default vaule is 0.05.}
+\item{mlabel}{label of mark (wind direction). The default vaule is "West wind".}
 
-\item{ticky}{adjust value for the y position of wind direction legend. The default vaule is -0.1.}
+\item{mx}{adjust value for the x position of mark (wind direction). The default vaule is 0.05.}
 
-\item{tickwd}{direction of wind direction legend. The default vaule is 270.}
+\item{my}{adjust value for the y position of mark (wind direction). The default vaule is -0.1.}
+
+\item{mwd}{direction of mark (wind direction). The default vaule is 270.}
 }
 \description{
 Easy way to plot time series.
 }
 \examples{
-\dontrun{ 
-geom_tsw(met, coliws=4, coliwd=5)
+\dontrun{
+metds=trs(met, bkip="15 mins")
+geom_tsw(metds, coliws=4, coliwd=5)
 }
 }

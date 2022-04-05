@@ -15,7 +15,7 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
+#' \dontrun{ 
 #' x=avri(aqi, bkip = "1 hour", mode = "recipes", value
 #'  = "day", st = "2017-05-01 00:00:00")
 #' geom_avri(x,cave=6, csd=11, alpha=0.5, lcc="#0050b3",
