@@ -14,7 +14,6 @@ geom_psd(
   trans = "identity",
   colsz = 1,
   fsz = 13,
-  ff = "TT Arial",
   lsz = 0.4,
   tkl = 0.2
 )
@@ -37,8 +36,6 @@ geom_psd(
 \item{colsz}{numeric value, size of columns in plot.}
 
 \item{fsz}{font size in plot.}
-
-\item{ff}{font family in plot.}
 
 \item{lsz}{line size of panel border and axis in plot.}
 
