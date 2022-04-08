@@ -127,11 +127,7 @@ The geom_ts function supports the bquote syntax. For example, what you saw in th
 
 Here are two diagrams, one showing how it is written and one showing the effect, which should be enlightening for you to see. The basic usage is all in there. (Image content from the link below)   
 
-<img src="https://trinkerrstuff.files.wordpress.com/2018/03/picture1.png?w=640" align="middle"/>    
-
-<img src="https://trinkerrstuff.files.wordpress.com/2018/03/capture4.png?w=234&h=33" align="middle"/>    
-
-Here is more information: https://trinkerrstuff.wordpress.com/2018/03/15/2246/  
+Here is more information about bquote syntax: https://trinkerrstuff.wordpress.com/2018/03/15/2246/  
   
 ### Swap layer order  
 

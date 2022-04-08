@@ -1,4 +1,4 @@
-b930a6a3c2dedd7a1b981a8c5d8153e8 *DESCRIPTION
+119ddfb4b499e584d7e59927a969698a *DESCRIPTION
 e62637ea8a114355b985fd86c9ffbd6e *LICENSE
 596abcb44cab0d993958a9304634a64d *NAMESPACE
 ea7be574535d131129992e6386f92583 *R/afp.R
@@ -38,9 +38,9 @@ d8fdf2e947197cc5965a921b134b9fc3 *data/met.rda
 383984bc7f4f5145902255068502c018 *inst/doc/Air_Quality.R
 4addec00ed200369ebb84979236f7e29 *inst/doc/Air_Quality.Rmd
 784ba4f3152488cdf9e453e2be6ef731 *inst/doc/Air_Quality.html
-408de466f4d5f2a19759e26f1358227b *inst/doc/Atmospheric_Radiation.R
-fa57e3a462bdb1433d07865270011970 *inst/doc/Atmospheric_Radiation.Rmd
-23f7612d631c2c4d9a7da96d260340d9 *inst/doc/Atmospheric_Radiation.html
+2bca3da11357ff9d17d46206f4362d95 *inst/doc/Atmospheric_Radiation.R
+2ed7436fc521f29d880ee8fdde6120bc *inst/doc/Atmospheric_Radiation.Rmd
+7adfe3367c863be6c4548983b23546b5 *inst/doc/Atmospheric_Radiation.html
 c6de870a090f1d77e2977dd011d33971 *inst/doc/Basic_Functions.R
 3ff95d6987869cc776112d5e14301109 *inst/doc/Basic_Functions.Rmd
 6646ae7e46b50b0721ad9ab800ecec17 *inst/doc/Basic_Functions.html
@@ -48,10 +48,10 @@ c6de870a090f1d77e2977dd011d33971 *inst/doc/Basic_Functions.R
 6b8b3b92a42bd396829537fa38673c13 *inst/doc/Particle_Size_Distribution.Rmd
 e4aac7fa4fdf85f26337778fa5a004aa *inst/doc/Particle_Size_Distribution.html
 dad992caf390e60449dd102f02a564a7 *inst/doc/Plot_Functions.R
-4404abbb235badc2444372ccf1cf79c1 *inst/doc/Plot_Functions.Rmd
-272fef6d4610c53c0b2ebab23ac35cf7 *inst/doc/Plot_Functions.html
-29a35123ee59aa147b21e74fadc8e2c6 *inst/doc/Trace_Gas_Chemistry.R
-95ea44972214cba8a6ea3ea14854e3b1 *inst/doc/Trace_Gas_Chemistry.Rmd
+bd88673633c95c864bffd9ef7d7f3f70 *inst/doc/Plot_Functions.Rmd
+58abbae29c4226c1402b7c9d17a3fae2 *inst/doc/Plot_Functions.html
+25f27c2631ffd28ea25186ac7d9cf75f *inst/doc/Trace_Gas_Chemistry.R
+58a203d426165a554536b195972d44fd *inst/doc/Trace_Gas_Chemistry.Rmd
 c266018c1616829b71b44181659b6bdd *inst/doc/Trace_Gas_Chemistry.html
 2449f66197d0c20d3368a0f07b4aa64e *inst/extdata/smps.txt
 4e736f44c05e84c623c385a8fa403134 *man/afp.Rd
@@ -85,8 +85,8 @@ c5e571cb04e8aa2567e1035e0fa33749 *man/tuv.Rd
 50c0260ec49f2d67c5e410318ac9deef *man/voc.Rd
 d52f8b9845cd6e5dba400a0034e7682d *man/vocct.Rd
 4addec00ed200369ebb84979236f7e29 *vignettes/Air_Quality.Rmd
-fa57e3a462bdb1433d07865270011970 *vignettes/Atmospheric_Radiation.Rmd
+2ed7436fc521f29d880ee8fdde6120bc *vignettes/Atmospheric_Radiation.Rmd
 3ff95d6987869cc776112d5e14301109 *vignettes/Basic_Functions.Rmd
 6b8b3b92a42bd396829537fa38673c13 *vignettes/Particle_Size_Distribution.Rmd
-4404abbb235badc2444372ccf1cf79c1 *vignettes/Plot_Functions.Rmd
-95ea44972214cba8a6ea3ea14854e3b1 *vignettes/Trace_Gas_Chemistry.Rmd
+bd88673633c95c864bffd9ef7d7f3f70 *vignettes/Plot_Functions.Rmd
+58a203d426165a554536b195972d44fd *vignettes/Trace_Gas_Chemistry.Rmd
