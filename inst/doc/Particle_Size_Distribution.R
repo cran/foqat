@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -13,7 +13,7 @@ dn1_table=dn_table[,c(1,5:148)]
 dn1_table[,1]=as.POSIXct(dn1_table[,1], format="%m/%d/%Y %H:%M:%S", tz="GMT")
 head(dn1_table[,1:5])
 
-## ---- fig.width = 7, fig.height = 3-------------------------------------------
+## ----fig.width = 7, fig.height = 3--------------------------------------------
 geom_psd(dn1_table,fsz=10)
 
 ## -----------------------------------------------------------------------------
@@ -44,7 +44,7 @@ dsdlogdp_list=dn2_table[["df_channels"]][,c(2,5)]
 ds_avri=avri(dsdlogdp_list,mode="custom",value=1)
 head(ds_avri)
 
-## ---- fig.width = 7-----------------------------------------------------------
+## ----fig.width = 7------------------------------------------------------------
 par(mar=c(5,5,2,2))
 plot(x=ds_avri[,1],y=ds_avri[,2], pch=16, xlab="Midrange (nm)", ylab=expression("dS (cm"^2*"/cm"^3*")"), col="#597ef7")
 

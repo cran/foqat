@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -16,7 +16,7 @@ aqids[, 2:6]=round(aqids[, 2:6], 2)
 #pre-process the met data
 metds=trs(met, bkip="15 mins")
 
-## ---- echo=FALSE, layout="l-body-outset", paged.print=FALSE-------------------
+## ----echo=FALSE, layout="l-body-outset", paged.print=FALSE--------------------
 library(rmarkdown)
 paged_table(aqids, options = list(max.print=10000, rows.print = 10, cols.print = 6))
 
@@ -145,40 +145,40 @@ p2=geom_ts(
 library(patchwork)
 p1/p2&theme(plot.margin = margin(b=1))
 
-## ---- eval=FALSE, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE-----
+## ----eval=FALSE, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE------
 #  geom_ts_batch(aqids)
 
-## ---- eval=FALSE, fig.height=6, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----eval=FALSE, fig.height=6, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 #  xlab=bquote(Time~"")
 #  ylab=list(bquote(NO~" "~(ppbv)), bquote(NO[2]~" "~(ppbv)), bquote(CO~" "~(ppmv)), bquote(SO[2]~" "~(ppbv)), bquote(O[3]~" "~(ppbv)))
 #  cclist=c("#eb2f96", "#1890ff", "#52c41a", "#faad14", "#f5222d")
 #  geom_ts_batch(aqids, xlab=xlab, ylab=ylab, cclist=cclist, bquote=TRUE)
 
-## ---- fig.width=7, fig.height=3, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----fig.width=7, fig.height=3, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 geom_tsw(metds, coliws=4, coliwd=5, mx = 0.7, my = 2.5)
 
-## ---- message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE-----------------
+## ----message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE------------------
 dn_table = read.delim(system.file("extdata", "smps.txt", package = "foqat"),
 check.names = FALSE)
 dn1_table=dn_table[,c(1,5:148)]
 dn1_table[,1]=as.POSIXct(dn1_table[,1], format="%m/%d/%Y %H:%M:%S", tz="GMT")
 head(dn1_table[,1:5])
 
-## ---- fig.width=7, fig.height=3, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----fig.width=7, fig.height=3, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 geom_psd(dn1_table,fsz=10)
 
-## ---- fig.width=3.5, fig.height = 2.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----fig.width=3.5, fig.height = 2.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 avri_aqi=avri(aqi, bkip = "1 hour", mode = "recipes", value = "day", st = "2017-05-01 00:00:00")
 geom_avri(avri_aqi,cave=6,csd=11)
 
-## ---- fig.width=3.5, fig.height = 2.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----fig.width=3.5, fig.height = 2.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 geom_avri(avri_aqi,cave=6,csd=11,alpha=0.5,lcc="#0050b3",
 rff="#40a9ff", xlab="Hour of day",ylab=bquote(O[3]~" "~(ppbv)))
 
-## ---- fig.width=7, fig.height = 7.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----fig.width=7, fig.height = 7.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 geom_avri_batch(avri_aqi)
 
-## ---- fig.width=7, fig.height = 7.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
+## ----fig.width=7, fig.height = 7.5, message=FALSE, warning=FALSE, exercise=TRUE, tidy=FALSE----
 lcc=c("#f5222d","#fa8c16","#52c41a","#1890ff","#722ed1")
 rff=c("#ff7875","#ffc069","#95de64","#69c0ff","#b37feb")
 xlab1=list(bquote(Time~""),bquote(Time~""),bquote(Time~""), bquote(Time~""),bquote(Time~""))

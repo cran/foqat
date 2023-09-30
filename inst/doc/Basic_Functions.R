@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -42,7 +42,7 @@ head(new_voc)
 prop_voc=prop(voc)
 head(prop_voc)
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  df=data.frame(aqi,day=day(lubridate::aqi$Time))
 #  lr_result=anylm(df, xd=c(2,3), yd=6, zd=4, td=7,dign=3)
 #  View(lr_result)
